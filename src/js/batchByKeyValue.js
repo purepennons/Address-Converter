@@ -18,4 +18,16 @@ module.exports = function(inputPath, outputPath, delimiter) {
     encoding  : 'utf8',
     autoClose : true
   });
+
+  // read input file line by line.
+  var rdl = readline.createInterface({
+    input    : inputStream,
+    output   : process.stdout,
+    terminal : false
+  });
+
+  rdl.on('line', function(line) {
+    console.log(line);
+  });
+
 };
