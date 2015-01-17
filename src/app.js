@@ -2,7 +2,7 @@
   "use strict"
 
   var addToLat = require('./js/addToLat')
-
+    , batchByKeyValue = require('./js/batchByKeyValue')
   ;
 
   var argvs = process.argv;
@@ -10,12 +10,17 @@
   if(argvs.length > 2) {
 
     // accept params
-    var param1 = argvs[2]
+    var param1     = argvs[2]
+      , inputPath  = argvs[3]
+      , param2     = argvs[4]
+      , outputPath = argvs[5]
     ;
 
     switch (param1) {
 
       case '-i':
+
+        batchByKeyValue(inputPath, outputPath, ',');
 
         break;
 
@@ -39,14 +44,5 @@
     process.exit(1);
 
   }
-
-
-
-  //
-  // addToLat('No.108, Sec. 5, Anhe Rd., Annan Dist., Tainan City 709, Taiwan', function(err, location) {
-  //
-  //   console.log(location);
-  //
-  // });
 
 })();
