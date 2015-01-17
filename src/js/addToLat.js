@@ -35,8 +35,12 @@ module.exports = function(address, cb, errCb) {
 
       //wait all data to be received
       res.on('end', function(){
-        cb(recData);
-        console.log(recData);
+
+        // change receiving data from string to json and pick the lat and lng fields.
+        var location = JSON.parse(recData).results[0].geometry.location;
+
+        cb(location);
+
       });
 
     } else {
