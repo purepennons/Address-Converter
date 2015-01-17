@@ -1,4 +1,4 @@
-module.exports = function(address, cb, errCb) {
+module.exports = function(address, cb) {
   "use strict"
 
   var querystring = require('querystring')
@@ -36,16 +36,30 @@ module.exports = function(address, cb, errCb) {
       //wait all data to be received
       res.on('end', function(){
 
-        // change receiving data from string to json and pick the lat and lng fields.
-        var location = JSON.parse(recData).results[0].geometry.location;
+        // change receiving data from string to json.
+        var result = JSON.parse(recData);
 
-        cb(location);
+        if(result.status === 'OK') {
+
+          // pick the location field which contains lat and lng attributes.
+          if('results' in result) {
+
+            var location = result.results[0].geometry.location;
+            cb(null, location);
+
+          }
+
+        } else {
+
+          cb('AJAX ERROR: ' + result.status);
+
+        }
 
       });
 
     } else {
 
-      errCb(res.statusCode);
+      cb('HTTP ERROR: status code: ' + res.statusCode);
 
     }
 
