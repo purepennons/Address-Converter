@@ -4,7 +4,7 @@ module.exports = function(inputPath, outputPath, delimiter) {
     , path     = require('path')
     , readline = require('readline')
     , async    = require('async')
-    , addToLat = require('./addToLat.js')
+    , batch    = require('./batch.js')
   ;
 
   // normalize path
@@ -20,14 +20,30 @@ module.exports = function(inputPath, outputPath, delimiter) {
   });
 
   // read input file line by line.
+  // push each line to inputQueue.
   var rdl = readline.createInterface({
     input    : inputStream,
     output   : process.stdout,
     terminal : false
   });
 
+  var inputQueue = [];
+
   rdl.on('line', function(line) {
-    console.log(line);
+
+    inputQueue.push(line);
+
+  });
+
+  var test = [];
+
+  test.push('台南市安南區安昌街275巷21弄18號');
+  test.push('台南市安和路五段108號');
+  test.push('基隆路四段43號');
+
+  // start to convert
+  batch(test, [], function(){
+
   });
 
 };
