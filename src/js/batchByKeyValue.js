@@ -19,31 +19,41 @@ module.exports = function(inputPath, outputPath, delimiter) {
     autoClose : true
   });
 
-  // read input file line by line.
-  // push each line to inputQueue.
-  var rdl = readline.createInterface({
-    input    : inputStream,
-    output   : process.stdout,
-    terminal : false
-  });
 
   var inputQueue = [];
 
-  rdl.on('line', function(line) {
+  async.series({
+    resdFile: function() {
+      // read input file line by line.
+      // push each line to inputQueue.
+      var rdl = readline.createInterface({
+        input    : inputStream,
+        output   : process.stdout,
+        terminal : false
+      });
 
-    inputQueue.push(line);
+      rdl.on('line', function(line) {
+        var splitArray = line.split(delimiter);
+        var record = {
+          index: parseInt(splitArray[0]),
+          address: splitArray[1]
+        };
+
+        console.log(record);
+
+        inputQueue.push(record);
+
+      });
+    }
+  }, function(err, results) {
 
   });
 
-  var test = [];
 
-  test.push('台南市安南區安昌街275巷21弄18號');
-  test.push('台南市安和路五段108號');
-  test.push('基隆路四段43號');
 
   // start to convert
-  batch(test, [], function(){
-
-  });
+  // batch(inputQueue, [], function(){
+  //
+  // });
 
 };

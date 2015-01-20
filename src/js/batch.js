@@ -13,33 +13,50 @@ module.exports = function(inputArray, baseArray, cb) {
   // main
   this.batch = function(unsuccess, success, totalLength, counter) {
 
-    var unsuccessArray  = []
-      , convertedLength = success.length
+    var convertedLength = success.length
     ;
 
     // start to convert
-    async.mapLimit(unsuccess, 1, function(address, callback) {
+    async.mapSeries(unsuccess, function(record, callback) {
 
-      addToLat(address, function(err, location) {
+      addToLat(record.address, function(err, location) {
 
         if(err) {
 
+          console.log(record.index + '. ' + record.address + ': ' + 'unsuccess.');
           console.log(err);
 
-          unsuccessArray.push(address);
-          callback(null, address);
+          callback(null, record);
 
         } else {
 
-          console.log(address + ':', location);
+          console.log(record.index + '. ' + record.address + ': ' + 'success.');
+          console.log(location);
 
-          callback(null, address);
+          success.push(record.address + ',' + location.lat + ',' + location.lng) ;
+          callback(null, false);
 
         }
 
       });
 
     }, function(err, results) {
+
+      // filter records which were not success.
+      async.filter(results, function(result, callback) {
+
+        if(result) {
+          return true;
+        } else {
+          return false;
+        }
+
+      }, function(unsuccessArrays) {
+
+        console.log(unsuccessArrays);
+
+
+      });
 
     });
 
